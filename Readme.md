@@ -2,7 +2,7 @@
 
 
 ## WePromt 0.1
-WePrompt is a GUI that helps you with SQL queries , and debbuging in Wevioo !
+WePrompt is a GUI that helps you with SQL queries , and debbuging at Wevioo !
 
 ## Prerequirments
 Python 3.4+
@@ -47,6 +47,8 @@ Make sure you have Python 3.x installed on your machine. You can install the req
 pip install rwkv
 pip install torch
 pip install pynvml
+pip install fastapi
+pip install pydantic
 
 
 ```
