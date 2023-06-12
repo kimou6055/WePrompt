@@ -1,21 +1,18 @@
-import logging,os
-from multiprocessing import Queue
-import re
+import logging
+import os
+from fastapi import FastAPI
+from pydantic import BaseModel
 from pynvml import *
-import torch,gc
+import torch
+import gc
+import uvicorn
+
+
 current_path = os.path.dirname(os.path.abspath(__file__))
 
 # set these before import RWKV
 os.environ['RWKV_JIT_ON'] = '1'
-os.environ["RWKV_CUDA_ON"] = '1' # '1' to compile CUDA kernel (10x faster), requires c++ compiler & cuda libraries
-
-
-# Before turning RWKV_CUDA_ON = 1 make sure to install CUDA and do : 
-# Linux : 
-# export PATH=/usr/local/cuda/bin:$PATH
-# export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
-# Windows : 
-# Install VS2022 build tools (https://aka.ms/vs/17/release/vs_BuildTools.exe select Desktop C++). Reinstall CUDA 12.x (install VC++ extensions)
+os.environ["RWKV_CUDA_ON"] = '1'  # '1' to compile CUDA kernel (10x faster), requires c++ compiler & cuda libraries
 
 
 from rwkv.model import RWKV
@@ -24,23 +21,27 @@ from rwkv.utils import PIPELINE, PIPELINE_ARGS
 torch.backends.cudnn.benchmark = True
 torch.backends.cudnn.allow_tf32 = True
 torch.backends.cuda.matmul.allow_tf32 = True
-CUDA_LAUNCH_BLOCKING=1
+CUDA_LAUNCH_BLOCKING = 1
+
+class RequestData(BaseModel):
+    user_message: str
+    instruction: str
+
 
 class GenerateResponse():
-    
     def __init__(self):
         nvmlInit()
         self.gpu_h = nvmlDeviceGetHandleByIndex(0)
         self.ctx_limit = 1024
-        #self.ctx_limit = 512
-        #self.model = RWKV(model=current_path+'/RWKV-4-Raven-7B-v10-Eng99%-Other1%-20230418-ctx8192', strategy='cuda:0 fp16i8 *20+ -> cpu fp32')
-        self.model = RWKV(model=current_path+'/RWKV-4-Raven-7B-v10-Eng99%-Other1%-20230418-ctx8192', strategy='cuda fp16 *12 -> cuda fp16i8 *1 -> cpu fp32')
-
+        self.model = RWKV(
+            model=current_path+'/RWKV-4-Raven-7B-v10-Eng99%-Other1%-20230418-ctx8192',
+            strategy='cuda fp16 *12 -> cuda fp16i8 *1 -> cpu fp32'
+        )
         self.pipeline = PIPELINE(self.model, current_path+'/20B_tokenizer.json')
-        
+
     def generate_prompt(self, instruction, input=None):
-        instruction = instruction.strip().replace('\r\n','\n').replace('\n\n','\n')
-        input = input.strip().replace('\r\n','\n').replace('\n\n','\n')
+        instruction = instruction.strip().replace('\r\n', '\n').replace('\n\n', '\n')
+        input = input.strip().replace('\r\n', '\n').replace('\n\n', '\n')
         if input:
             return f"""Below is an instruction that describes a task, paired with an input that provides further context. Write a short response that appropriately completes the request.
 
@@ -61,15 +62,16 @@ class GenerateResponse():
             # Response:
             """
 
-    def evaluate(self, instruction, input=None, token_count=200, temperature=1.0, top_p=0.7, presencePenalty=0.1, countPenalty=0.1):
+    def evaluate(self, instruction, input=None, token_count=200, temperature=1.0, top_p=0.7, presencePenalty=0.1,
+                 countPenalty=0.1):
         args = PIPELINE_ARGS(temperature=max(0.2, float(temperature)), top_p=float(top_p),
                              alpha_frequency=countPenalty,
                              alpha_presence=presencePenalty,
-                             token_ban=[], # ban the generation of some tokens
-                             token_stop=[0]) # stop generation whenever you see any token here
+                             token_ban=[],  # ban the generation of some tokens
+                             token_stop=[0])  # stop generation whenever you see any token here
 
-        instruction = instruction.strip().replace('\r\n','\n').replace('\n\n','\n')
-        input = input.strip().replace('\r\n','\n').replace('\n\n','\n')
+        instruction = instruction.strip().replace('\r\n', '\n').replace('\n\n', '\n')
+        input = input.strip().replace('\r\n', '\n').replace('\n\n', '\n')
         ctx = self.generate_prompt(instruction, input)
 
         all_tokens = []
@@ -105,51 +107,35 @@ class GenerateResponse():
         yield out_str.strip()
 
 
-    def run(self,message):
-
-        # Get the user's message from the tracker
-        user_message = message
-       
-        # Generate a response using 
+    def run(self, message,instruction):
+        user_input = message
         try:
-        
-            input = "Only output SQL code"
-            
-            output = self.evaluate(user_message, input, 300, 0.4, 0.7, 0.1, 0.1)
+            input_text = instruction
+            output = self.evaluate(user_input, input_text, 300, 0.4, 0.7, 0.1, 0.1)
 
+            generated_text = ""
             for value in output:
-                pass
+                print(value)
             generated_text = value
-        
+
         except Exception as e:
             logging.exception(f"Error generating response: {e}")
 
         return generated_text
 
 
-def main():
-    # Create an instance of GenerateResponse
-    response_generator = GenerateResponse()
+app = FastAPI()
+response_generator = GenerateResponse()
 
-    aux = ""
-    while True:
-        # Get user input
-        user_input = input("Enter your message: ")
-        aux = aux + '\n user message : ' + user_input
-        # Create a task to run the RWKV process 
-        generated_text=response_generator.run(aux)
-        
-        # Print the final response
-        print("Generated response:", generated_text)
-        aux = aux + '\n generated text : ' + generated_text 
-        # Add a newline for readability
-        print()
-        with open("output.txt", "w") as file:
-            file.write(aux)
 
-       
-        
+@app.post("/generate-response")
+def generate_response(request_data: RequestData):
+    user_message = request_data.user_message
+    instruction = request_data.instruction
 
-if __name__ == '__main__':
-    main()
+    generated_text = response_generator.run(user_message,instruction)
+    return {"generated_text": generated_text}
 
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)

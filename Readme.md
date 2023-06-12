@@ -61,3 +61,21 @@ To use just do :
 python actions.py
 ```
 
+To use it as a FastApi: 
+
+```
+python RavenApi.py
+```
+Then send a POST request at this address: http://localhost:8000/generate-response
+
+in this syntax : 
+```
+{
+  "user_message": "create 3 tables : vehicule , person , moto ",
+  "instruction": "Only write SQL code"
+}
+
+```
+## TO DO 
+
+Consuming the API with Joget
