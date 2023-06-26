@@ -1,7 +1,7 @@
 <img  width='805' src="https://miro.medium.com/v2/resize:fit:1400/1*iGdFJTHMIG79N2HChWaooQ.gif" alt="kimou6055" /></a> 
 
 
-## WePromt 0.1
+## WePromt 2.0
 WePrompt is a GUI that helps you with SQL queries , and debbuging at Wevioo !
 
 ## Prerequirments
@@ -49,6 +49,8 @@ pip install torch
 pip install pynvml
 pip install fastapi
 pip install pydantic
+pip install mysql
+pip install pickle
 
 
 ```
@@ -60,7 +62,11 @@ Make sure to put the model in the root folder
 To use just do : 
 
 ```
-python actions.py
+cd instructions
+```
+
+```
+python RavenApi2.0.py
 ```
 
 To use it as a FastApi: 
@@ -73,11 +79,20 @@ Then send a POST request at this address: http://localhost:8000/generate-respons
 in this syntax : 
 ```
 {
-  "user_message": "create 3 tables : vehicule , person , moto ",
-  "instruction": "Only write SQL code"
+  "user_message": " summarize our last conversation  ",
+  "user_id": "22",
+  "discussion_id": "4",
+  "prompt_file": "ProjectAdvisor"
 }
 
 ```
+the response will be as the follow : 
+```
+{
+    "generated_text": " Sure, here's a summary of our conversation:\n1. I created a new file called `Home.js` and added some basic HTML and CSS to it.\n2. I created a new file called `index.js` and added some basic code to it, including a function that sends a request to the MySQL database using the `axios` library.\n3. I created a new file called `App.js` and added some basic code to it, including a function that renders the Home component using the `ReactDOM.render()` method.\n4. I created a new file called `index.css` and added some basic styles to it, including a logo and some basic styling for the page\n\n"
+}
+```
+You can use ProjectAdvisor or SQLAdvisor at the moment
 ## TO DO 
 
 Consuming the API with Joget
