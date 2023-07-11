@@ -7,12 +7,9 @@ os.environ["RWKV_JIT_ON"] = '1'
 os.environ["RWKV_CUDA_ON"] = '1'
 from rwkv.model import RWKV
 from rwkv.utils import PIPELINE
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi import FastAPI, Request
-import uvicorn
+from prompt_toolkit import prompt
 import pickle
-import mysql.connector
-from datetime import datetime
+
 
 class ChatRWKV:
     def __init__(self):
@@ -26,7 +23,8 @@ class ChatRWKV:
         torch.backends.cudnn.benchmark = True
         torch.backends.cudnn.allow_tf32 = True
         torch.backends.cuda.matmul.allow_tf32 = True
-        self.args.strategy = 'cuda fp16 *12 -> cuda fp16i8 *1 -> cpu fp32'
+        #self.args.strategy = 'cuda fp16 *12 -> cuda fp16i8 *1 -> cpu fp32'
+        self.args.strategy = 'cuda fp16'
         self.args.MODEL_NAME = 'RWKV-4-Raven-7B-v12-Eng98%-Other2%-20230521-ctx8192'
 
         self.CHAT_LANG = 'English'
@@ -209,54 +207,17 @@ class ChatRWKV:
         
         self.save_all_stat(srv, 'chat', out,user_id,discussion_id)
         
-        conn = mysql.connector.connect(
-        host="192.168.23.138",
-        port=3307,
-        user="weprompt",
-        password="weprompt",
-        database="jwdb",
-        )
-        
-        cursor = conn.cursor()
-        insert_query = "INSERT INTO app_fd_discussions (id,c_msg, c_generated_response, c_user_id,c_discussion_id,c_prompt_file,c_timestamp) VALUES (%s,%s, %s, %s,%s, %s, %s)" 
-        donnees = (datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f"),msg,generated_response, user_id,discussion_id,prompt_file,datetime.now())
-        cursor.execute(insert_query, donnees)
-        conn.commit()
-        cursor.close()
-        conn.close()
 
         return generated_response    
 
 
-app = FastAPI()
-origins = [
-    "http://localhost",
-    "http://localhost:8080",
-    
-    
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 response_generator = ChatRWKV()
-
-
-@app.post("/generate-response")
-async def generate_response(request: Request):
-    request_data = await request.json()
-    user_message = request_data.get('user_message')
-    user_id = request_data.get('user_id')
-    discussion_id = request_data.get('discussion_id')
-    prompt_file = request_data.get('prompt_file')
-
-    generated_text = response_generator.on_message(user_message, user_id, discussion_id, prompt_file)
-    return {"generated_text": generated_text}
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
-
+print("say something : ")
+while True:
+    msg = input()
+    if len(msg.strip()) > 0:
+        print("\n")
+        print(response_generator.on_message(msg, '30', '1', 'ProjectAdvisor'))
+        print("\n")
+    else:
+        print('Error: please say something')
