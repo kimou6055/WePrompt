@@ -24,9 +24,9 @@ class ChatRWKV:
         torch.backends.cudnn.allow_tf32 = True
         torch.backends.cuda.matmul.allow_tf32 = True
         #self.args.strategy = 'cuda fp16 *12 -> cuda fp16i8 *1 -> cpu fp32'
-        self.args.strategy = 'cuda fp16 -> cpu fp32'
+        self.args.strategy = 'cuda fp16'
         self.args.MODEL_NAME = 'RWKV-4-Raven-7B-v12-Eng98%-Other2%-20230521-ctx8192'
-
+        self.device = torch.device('cuda:0')
         self.CHAT_LANG = 'English'
         
         self.CHAT_LEN_SHORT = 30
@@ -78,7 +78,8 @@ class ChatRWKV:
        
         tokens = [int(x) for x in tokens]
         self.model_tokens += tokens
-       
+        tokens = tokens.to(self.device)
+        
         while len(tokens) > 0:
             out, self.model_state = self.model.forward(tokens[:self.CHUNK_LEN], self.model_state)
             tokens = tokens[self.CHUNK_LEN:]
