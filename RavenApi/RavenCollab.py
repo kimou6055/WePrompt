@@ -4,7 +4,7 @@ current_path = os.path.dirname(os.path.abspath(__file__))
 import numpy as np
 import torch
 os.environ["RWKV_JIT_ON"] = '1' 
-os.environ["RWKV_CUDA_ON"] = '1'
+os.environ["RWKV_CUDA_ON"] = '0'
 from rwkv.model import RWKV
 from rwkv.utils import PIPELINE
 from prompt_toolkit import prompt
