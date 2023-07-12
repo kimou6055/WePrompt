@@ -5,7 +5,7 @@ import numpy as np
 import torch
 os.environ["RWKV_JIT_ON"] = '1' 
 os.environ["RWKV_CUDA_ON"] = '1'
-sys.path.append(f'{current_path}/../rwkv_pip_package/src')
+sys.path.append(f'{current_path}/rwkv_pip_package/src')
 from rwkv.model import RWKV
 from rwkv.utils import PIPELINE
 from prompt_toolkit import prompt

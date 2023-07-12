@@ -523,8 +523,8 @@ class RWKV(MyModule):
             T, C = x.size()
             xx = F.layer_norm(x, (C,), weight=ln_w, bias=ln_b)
             ############################## karim
-            sx = sx.to('cuda')
-            xx = xx.to('cuda')
+            sx = sx.to("cuda:0").float()
+            xx = xx.to("cuda:0").float()
             ##############################
             
             sx = torch.cat((sx.unsqueeze(0), xx[:-1,:]))
