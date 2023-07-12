@@ -110,7 +110,20 @@ class ChatRWKV:
         n = f'{name}_{srv}'
         with open(f'{current_path}/users/{user_id}/{discussion_id}/{n}.pkl', 'rb') as f:
             self.all_state[n] = pickle.load(f)
+            ######################################
+            for key in self.all_state:
+                if isinstance(self.all_state[key], torch.Tensor):
+                    self.all_state[key] = self.all_state[key].to('cuda')
+                elif isinstance(self.all_state[key], dict):
+                    for inner_key in self.all_state[key]:
+                        if isinstance(self.all_state[key][inner_key], torch.Tensor):
+                            self.all_state[key][inner_key] = self.all_state[key][inner_key].to('cuda')
+
+            #########################################
         self.model_state = copy.deepcopy(self.all_state[n]['rnn'])
+        ##########################################
+        self.model_state = [state.to('cuda') for state in self.model_state]
+        ##########################################
         self.model_tokens = copy.deepcopy(self.all_state[n]['token'])
         return self.all_state[n]['out']
         
