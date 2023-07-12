@@ -5,10 +5,8 @@ import numpy as np
 import torch
 os.environ["RWKV_JIT_ON"] = '1' 
 os.environ["RWKV_CUDA_ON"] = '1'
-sys.path.append(f'{current_path}/rwkv_pip_package/src')
 from rwkv.model import RWKV
 from rwkv.utils import PIPELINE
-from prompt_toolkit import prompt
 import pickle
 
 
@@ -25,7 +23,7 @@ class ChatRWKV:
         torch.backends.cudnn.allow_tf32 = True
         torch.backends.cuda.matmul.allow_tf32 = True
         #self.args.strategy = 'cuda fp16 *12 -> cuda fp16i8 *1 -> cpu fp32'
-        self.args.strategy = 'cuda bf16'
+        self.args.strategy = ' cpu fp32 *1 -> cuda fp16 '
         self.args.MODEL_NAME = 'RWKV-4-Raven-7B-v12-Eng98%-Other2%-20230521-ctx8192'
         self.CHAT_LANG = 'English'
         
@@ -78,13 +76,7 @@ class ChatRWKV:
        
         tokens = [int(x) for x in tokens]
         self.model_tokens += tokens
-        ###########################################
-     
-        for i, tensor in enumerate(self.model_state):
-            print(f"Tenseur {i}: {tensor.device}")
-            
-     
-        ###########################################
+        
         while len(tokens) > 0:
             out, self.model_state = self.model.forward(tokens[:self.CHUNK_LEN], self.model_state)
             tokens = tokens[self.CHUNK_LEN:]
