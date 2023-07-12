@@ -122,6 +122,7 @@ class ChatRWKV:
             #########################################
         self.model_state = copy.deepcopy(self.all_state[n]['rnn'])
         ##########################################
+        self.model_state =  self.model_state.float()
         self.model_state = [state.to('cuda') for state in self.model_state]
         ##########################################
         self.model_tokens = copy.deepcopy(self.all_state[n]['token'])
