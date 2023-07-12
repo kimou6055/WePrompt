@@ -540,6 +540,11 @@ class RWKV(MyModule):
             v = vx @ vw
             y, aa, bb, pp = cuda_wkv(T, C, t_decay, t_first, k, v, aa, bb, pp)
             
+            ##############################karim
+            r=r.float()
+            y=y.float()
+            ow=ow.float()
+            ##############################
             out = (r * y) @ ow
             return x + out, xx[-1,:], aa, bb, pp
 
