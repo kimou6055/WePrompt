@@ -5,7 +5,6 @@ import numpy as np
 import torch
 os.environ["RWKV_JIT_ON"] = '1' 
 os.environ["RWKV_CUDA_ON"] = '1'
-sys.path.append(f'{current_path}/rwkv_pip_package/src')
 from rwkv.model import RWKV
 from rwkv.utils import PIPELINE
 from prompt_toolkit import prompt
@@ -24,8 +23,8 @@ class ChatRWKV:
         torch.backends.cudnn.benchmark = True
         torch.backends.cudnn.allow_tf32 = True
         torch.backends.cuda.matmul.allow_tf32 = True
-        #self.args.strategy = 'cuda fp16 *12 -> cuda fp16i8 *1 -> cpu fp32'
-        self.args.strategy = 'cuda fp16'
+        self.args.strategy = 'cuda fp16 *12 -> cuda fp16i8 *1 -> cpu fp32'
+        #self.args.strategy = 'cuda fp16'
         self.args.MODEL_NAME = 'RWKV-4-Raven-7B-v12-Eng98%-Other2%-20230521-ctx8192'
         self.CHAT_LANG = 'English'
         
@@ -51,6 +50,8 @@ class ChatRWKV:
         self.AVOID_REPEAT_TOKENS = []
         
         self.all_state = {}
+        
+        self.device = "cuda"
         
         print(f'Loading model - {self.args.MODEL_NAME}')
         self.model = RWKV(model=self.args.MODEL_NAME, strategy=self.args.strategy)
@@ -78,7 +79,7 @@ class ChatRWKV:
        
         tokens = [int(x) for x in tokens]
         self.model_tokens += tokens
-        
+       
         while len(tokens) > 0:
             out, self.model_state = self.model.forward(tokens[:self.CHUNK_LEN], self.model_state)
             tokens = tokens[self.CHUNK_LEN:]
@@ -88,6 +89,8 @@ class ChatRWKV:
         if self.model_tokens[-1] in self.AVOID_REPEAT_TOKENS:
             out[self.model_tokens[-1]] = -999999999
         return out
+
+
 
 
     def save_all_stat(self, srv, name, last_out, user_id, discussion_id):
@@ -109,22 +112,8 @@ class ChatRWKV:
     def load_all_stat(self, srv, name,user_id,discussion_id):
         n = f'{name}_{srv}'
         with open(f'{current_path}/users/{user_id}/{discussion_id}/{n}.pkl', 'rb') as f:
-            self.all_state[n] = pickle.load(f)
-            ######################################
-            for key in self.all_state:
-                if isinstance(self.all_state[key], torch.Tensor):
-                    self.all_state[key] = self.all_state[key].to('cuda')
-                elif isinstance(self.all_state[key], dict):
-                    for inner_key in self.all_state[key]:
-                        if isinstance(self.all_state[key][inner_key], torch.Tensor):
-                            self.all_state[key][inner_key] = self.all_state[key][inner_key].to('cuda')
-
-            #########################################
+            self.all_state[n] = pickle.load(f) 
         self.model_state = copy.deepcopy(self.all_state[n]['rnn'])
-        ##########################################
-        self.model_state =  self.model_state.float()
-        self.model_state = [state.to('cuda') for state in self.model_state]
-        ##########################################
         self.model_tokens = copy.deepcopy(self.all_state[n]['token'])
         return self.all_state[n]['out']
         
