@@ -52,10 +52,8 @@ class ChatRWKV:
         
         self.all_state = {}
         
-        self.device = "cuda"
-        
         print(f'Loading model - {self.args.MODEL_NAME}')
-        self.model = RWKV(model=self.args.MODEL_NAME, strategy=self.args.strategy)
+        self.model = RWKV(model=self.args.MODEL_NAME, strategy=self.args.strategy).to("cuda")
         self.pipeline = PIPELINE(self.model, f"{current_path}/20B_tokenizer.json")
 
         for i in self.AVOID_REPEAT:
@@ -80,7 +78,7 @@ class ChatRWKV:
        
         tokens = [int(x) for x in tokens]
         self.model_tokens += tokens
-       
+        
         while len(tokens) > 0:
             out, self.model_state = self.model.forward(tokens[:self.CHUNK_LEN], self.model_state)
             tokens = tokens[self.CHUNK_LEN:]
