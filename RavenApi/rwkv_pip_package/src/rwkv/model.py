@@ -523,15 +523,18 @@ class RWKV(MyModule):
             T, C = x.size()
             xx = F.layer_norm(x, (C,), weight=ln_w, bias=ln_b)
             ############################## karim
-            sx = sx.to("cuda:0").float()
-            xx = xx.to("cuda:0").float()
+            sx = sx.to("cuda:0")
+            xx = xx.to("cuda:0")
             ##############################
             
             sx = torch.cat((sx.unsqueeze(0), xx[:-1,:]))
             kx = xx * k_mix + sx * (1 - k_mix)
             vx = xx * v_mix + sx * (1 - v_mix)
             rx = xx * r_mix + sx * (1 - r_mix)
-
+            ##############################karim
+            rx=rx.float()
+            rw=rw.float()
+            ##############################
             r = torch.sigmoid(rx @ rw)
             k = kx @ kw
             v = vx @ vw
