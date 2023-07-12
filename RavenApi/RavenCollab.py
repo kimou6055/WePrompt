@@ -78,7 +78,7 @@ class ChatRWKV:
        
         tokens = [int(x) for x in tokens]
         self.model_tokens += tokens
-       
+        
         while len(tokens) > 0:
             out, self.model_state = self.model.forward(tokens[:self.CHUNK_LEN], self.model_state)
             tokens = tokens[self.CHUNK_LEN:]
@@ -159,7 +159,7 @@ class ChatRWKV:
         out = self.load_all_stat(srv, 'chat',user_id,discussion_id)
         msg = msg.strip().replace('\r\n','\n').replace('\n\n','\n')
         new = f"{self.user}{self.interface} {msg}\n\n{self.bot}{self.interface}"
-                
+               
         out = self.run_rnn(self.pipeline.encode(new), newline_adj=-999999999)
 
         begin = len(self.model_tokens)

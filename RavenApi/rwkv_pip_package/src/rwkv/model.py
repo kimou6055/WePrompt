@@ -522,6 +522,10 @@ class RWKV(MyModule):
         def cuda_att_seq(self, x, sx, aa, bb, pp, ln_w, ln_b, k_mix, v_mix, r_mix, t_decay, t_first, kw, vw, rw, ow, kmx, krx, kmy, kry, vmx, vrx, vmy, vry, rmx, rrx, rmy, rry, omx, orx, omy, ory):
             T, C = x.size()
             xx = F.layer_norm(x, (C,), weight=ln_w, bias=ln_b)
+            ####### karim
+            xx = xx.to(torch.device('cuda'))
+            sx = sx.to(torch.device('cuda'))
+            #######
             sx = torch.cat((sx.unsqueeze(0), xx[:-1,:]))
             kx = xx * k_mix + sx * (1 - k_mix)
             vx = xx * v_mix + sx * (1 - v_mix)
