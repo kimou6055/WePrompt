@@ -24,8 +24,8 @@ class ChatRWKV:
         torch.backends.cudnn.benchmark = True
         torch.backends.cudnn.allow_tf32 = True
         torch.backends.cuda.matmul.allow_tf32 = True
-        #self.args.strategy = 'cuda fp16 *12 -> cuda fp16i8 *1 -> cpu fp32'
-        self.args.strategy = 'cuda fp16'
+        self.args.strategy = 'cuda fp16 *12 -> cuda fp16i8 *1 -> cpu fp32'
+        #self.args.strategy = 'cuda fp16'
         self.args.MODEL_NAME = 'RWKV-4-Raven-7B-v12-Eng98%-Other2%-20230521-ctx8192'
         self.CHAT_LANG = 'English'
         
@@ -78,12 +78,23 @@ class ChatRWKV:
        
         tokens = [int(x) for x in tokens]
         self.model_tokens += tokens
+        ###########################################
+        
+        for i, tensor in enumerate(self.model_state):
+            self.model_state[i] = tensor.to('cuda:0')
         
         for i, tensor in enumerate(self.model_state):
             print(f"Tenseur {i}: {tensor.device}")
+            
+        # Ajouter une dimension supplémentaire à chaque tenseur
+        self.model_state = [tensor.unsqueeze(0) for tensor in self.model_state]
+
+        # Concaténer les tenseurs
+        concatenated_tensor = torch.cat(self.model_state, dim=0)
         
+        ###########################################
         while len(tokens) > 0:
-            out, self.model_state = self.model.forward(tokens[:self.CHUNK_LEN], self.model_state)
+            out, self.model_state = self.model.forward(tokens[:self.CHUNK_LEN], concatenated_tensor)
             tokens = tokens[self.CHUNK_LEN:]
 
         out[self.END_OF_LINE] += newline_adj # adjust \n probability
