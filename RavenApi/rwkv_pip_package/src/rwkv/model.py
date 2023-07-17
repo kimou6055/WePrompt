@@ -522,26 +522,23 @@ class RWKV(MyModule):
         def cuda_att_seq(self, x, sx, aa, bb, pp, ln_w, ln_b, k_mix, v_mix, r_mix, t_decay, t_first, kw, vw, rw, ow, kmx, krx, kmy, kry, vmx, vrx, vmy, vry, rmx, rrx, rmy, rry, omx, orx, omy, ory):
             T, C = x.size()
             xx = F.layer_norm(x, (C,), weight=ln_w, bias=ln_b)
-            #################################################
             
-            # sx = sx.to("cuda")
-            # xx = xx.to("cuda")
-            
-            # print("xx is on device:", xx.device)
-            # print("sx is on device:", sx.device)
-            #################################################
-            
+            ###added .cuda() here
             sx = torch.cat((sx.cuda().unsqueeze(0), xx[:-1,:]))
             kx = xx * k_mix + sx * (1 - k_mix)
             vx = xx * v_mix + sx * (1 - v_mix)
             rx = xx * r_mix + sx * (1 - r_mix)
             #################################################
-            print("dtype of sx:", sx.dtype)
-            print("dtype of kx:", kx.dtype)
-            print("dtype of vx:", vx.dtype)
+            
             print("dtype of rx:", rx.dtype)
             print("dtype of rw:", rw.dtype)
-            rw = rw.to(rx.type())
+            print("dtype of kx:", kx.dtype)
+            print("dtype of kw:", kw.dtype)
+            print("dtype of vx:", vx.dtype)
+            print("dtype of vw:", vw.dtype)
+            print("dtype of ow:", ow.dtype)
+            
+            
             #################################################
             r = torch.sigmoid(rx @ rw)
             k = kx @ kw
