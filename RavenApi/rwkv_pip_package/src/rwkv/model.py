@@ -380,10 +380,14 @@ class RWKV(MyModule):
     @MyFunction
     def ffn_seq(self, x, sx, ln_w, ln_b, k_mix, r_mix, kw, vw, rw, kmx, krx, kmy, kry, vmx, vrx, vmy, vry, rmx, rrx, rmy, rry):
         xx = F.layer_norm(x, (x.shape[-1],), weight=ln_w, bias=ln_b)
-        sx = torch.cat((sx.unsqueeze(0), xx[:-1,:]))
+        ###################added cuda here
+        sx = torch.cat((sx.cuda().unsqueeze(0), xx[:-1,:]))
         kx = xx * k_mix + sx * (1 - k_mix)
         rx = xx * r_mix + sx * (1 - r_mix)
-
+         #################################################
+        rx = rx.to(torch.float16)
+        kx = kx.to(torch.float16)
+            #################################################
         r = torch.sigmoid(rx @ rw)
         vx = torch.square(torch.relu(kx @ kw))
         out = r * (vx @ vw)
@@ -530,14 +534,6 @@ class RWKV(MyModule):
             rx = xx * r_mix + sx * (1 - r_mix)
             #################################################
             
-            print("dtype of rx:", rx.dtype)
-            print("dtype of rw:", rw.dtype)
-            print("dtype of kx:", kx.dtype)
-            print("dtype of kw:", kw.dtype)
-            print("dtype of vx:", vx.dtype)
-            print("dtype of vw:", vw.dtype)
-            print("dtype of ow:", ow.dtype)
-        
             rx = rx.to(torch.float16)
             kx = kx.to(torch.float16)
             vx = vx.to(torch.float16)
