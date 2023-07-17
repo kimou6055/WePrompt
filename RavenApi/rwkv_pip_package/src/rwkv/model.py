@@ -524,7 +524,11 @@ class RWKV(MyModule):
             xx = F.layer_norm(x, (C,), weight=ln_w, bias=ln_b)
             #################################################
             print("xx is on device:", xx.device)
+            if(xx.device=='cpu'):
+                xx = xx.to('cuda')
             print("sx is on device:", sx.device)
+            if(xx.device=='cpu'):
+                xx = xx.to('cuda')
             #################################################
             
             sx = torch.cat((sx.unsqueeze(0), xx[:-1,:]))
