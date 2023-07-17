@@ -3,10 +3,12 @@ import os, copy, types, gc, sys
 current_path = os.path.dirname(os.path.abspath(__file__))
 import numpy as np
 
-os.environ["RWKV_JIT_ON"] = '1' 
-os.environ["RWKV_CUDA_ON"] = '1'
-from rwkv.model import RWKV
-from rwkv.utils import PIPELINE
+try:
+    os.environ["CUDA_VISIBLE_DEVICES"] = sys.argv[1]
+except:
+    pass
+        
+
 import pickle
 
 import torch
@@ -19,19 +21,21 @@ torch._C._jit_override_can_fuse_on_gpu(True)
 torch._C._jit_set_texpr_fuser_enabled(False)
 torch._C._jit_set_nvfuser_enabled(False)
 
+
+os.environ["RWKV_JIT_ON"] = '1' 
+os.environ["RWKV_CUDA_ON"] = '1'
+from rwkv.model import RWKV
+from rwkv.utils import PIPELINE
+
 class ChatRWKV:
     def __init__(self):
 
-        try:
-            os.environ["CUDA_VISIBLE_DEVICES"] = sys.argv[1]
-        except:
-            pass
         np.set_printoptions(precision=4, suppress=True, linewidth=200)
         self.args = types.SimpleNamespace()
         
         #self.args.strategy = 'cuda fp16 *12 -> cuda fp16i8 *1 -> cpu fp32'
-        self.args.strategy = 'fp16'
-        self.args.MODEL_NAME = 'RWKV-4-Raven-7B-v12-Eng98%-Other2%-20230521-ctx8192'
+        self.args.strategy = 'cuda fp16'
+        self.args.MODEL_NAME = 'RWKV-4-Ravepip in-7B-v12-Eng98%-Other2%-20230521-ctx8192'
         self.CHAT_LANG = 'English'
         
         self.CHAT_LEN_SHORT = 30
@@ -43,7 +47,7 @@ class ChatRWKV:
         self.GEN_alpha_presence = 0.2
         self.GEN_alpha_frequency = 0.2
         self.AVOID_REPEAT = '，：？！.,;'
-
+        self.GEN_penalty_decay = 0.996
         self.CHUNK_LEN = 128
 
         self.END_OF_TEXT = 0
@@ -191,7 +195,10 @@ class ChatRWKV:
                 temperature=x_temp,
                 top_p=x_top_p,
             )
-                
+            
+            for xxx in occurrence:
+                occurrence[xxx] *= self.GEN_penalty_decay 
+                            
             if token not in occurrence:
                 occurrence[token] = 1
             else:
@@ -224,7 +231,7 @@ while True:
     msg = input()
     if len(msg.strip()) > 0:
         print("\n")
-        print(response_generator.on_message(msg, '30', '1', 'ProjectAdvisor'))
+        print(response_generator.on_message(msg, '30', '7', 'ProjectAdvisor'))
         print("\n")
     else:
         print('Error: please say something')
