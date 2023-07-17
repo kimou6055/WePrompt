@@ -541,6 +541,7 @@ class RWKV(MyModule):
             print("dtype of vx:", vx.dtype)
             print("dtype of rx:", rx.dtype)
             print("dtype of rw:", rw.dtype)
+            rw = rw.to(rx.type())
             #################################################
             r = torch.sigmoid(rx @ rw)
             k = kx @ kw
