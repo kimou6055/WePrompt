@@ -524,16 +524,10 @@ class RWKV(MyModule):
             xx = F.layer_norm(x, (C,), weight=ln_w, bias=ln_b)
             #################################################
             
-            if torch.cuda.is_available():
-                device = torch.device("cuda")
-            else:
-                device = torch.device("cpu")
-                
-            sx = sx.to(device)
-            xx = xx.to(device)
+            sx = sx.to("cuda")
+            xx = xx.to("cuda")
             
             print("xx is on device:", xx.device)
-        
             print("sx is on device:", sx.device)
             #################################################
             
