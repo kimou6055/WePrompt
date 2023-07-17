@@ -537,6 +537,10 @@ class RWKV(MyModule):
             print("dtype of vx:", vx.dtype)
             print("dtype of vw:", vw.dtype)
             print("dtype of ow:", ow.dtype)
+        
+            rx = rx.to(torch.float16)
+            kx = kx.to(torch.float16)
+            vx = vx.to(torch.float16)
             
             
             #################################################
