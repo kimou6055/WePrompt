@@ -1,4 +1,4 @@
-interface = ""
+interface = ":"
 user = "bob"
 bot = "WePrompt"
 

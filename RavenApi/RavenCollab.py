@@ -2,13 +2,22 @@
 import os, copy, types, gc, sys
 current_path = os.path.dirname(os.path.abspath(__file__))
 import numpy as np
-import torch
+
 os.environ["RWKV_JIT_ON"] = '1' 
 os.environ["RWKV_CUDA_ON"] = '1'
 from rwkv.model import RWKV
 from rwkv.utils import PIPELINE
 import pickle
 
+import torch
+torch.backends.cudnn.benchmark = True
+torch.backends.cudnn.allow_tf32 = True
+torch.backends.cuda.matmul.allow_tf32 = True
+torch._C._jit_set_profiling_executor(True)
+torch._C._jit_set_profiling_mode(True)
+torch._C._jit_override_can_fuse_on_gpu(True)
+torch._C._jit_set_texpr_fuser_enabled(False)
+torch._C._jit_set_nvfuser_enabled(False)
 
 class ChatRWKV:
     def __init__(self):
@@ -19,11 +28,9 @@ class ChatRWKV:
             pass
         np.set_printoptions(precision=4, suppress=True, linewidth=200)
         self.args = types.SimpleNamespace()
-        torch.backends.cudnn.benchmark = True
-        torch.backends.cudnn.allow_tf32 = True
-        torch.backends.cuda.matmul.allow_tf32 = True
+        
         #self.args.strategy = 'cuda fp16 *12 -> cuda fp16i8 *1 -> cpu fp32'
-        self.args.strategy = ' cpu fp32 *1 -> cuda fp16 '
+        self.args.strategy = 'fp16'
         self.args.MODEL_NAME = 'RWKV-4-Raven-7B-v12-Eng98%-Other2%-20230521-ctx8192'
         self.CHAT_LANG = 'English'
         
@@ -59,7 +66,6 @@ class ChatRWKV:
             assert len(dd) == 1
             self.AVOID_REPEAT_TOKENS += dd
         
-
             
     def load_prompt(self,PROMPT_FILE):
         variables = {}
@@ -112,8 +118,9 @@ class ChatRWKV:
             self.all_state[n] = pickle.load(f) 
         self.model_state = copy.deepcopy(self.all_state[n]['rnn'])
         self.model_tokens = copy.deepcopy(self.all_state[n]['token'])
+   
         return self.all_state[n]['out']
-        
+
     def fix_tokens(self,tokens):
         if len(tokens) > 0 and tokens[-1] == self.END_OF_LINE_DOUBLE:
             tokens = tokens[:-1] + [self.END_OF_LINE, self.END_OF_LINE]
