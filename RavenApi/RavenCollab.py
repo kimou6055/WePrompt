@@ -223,9 +223,11 @@ response_generator = ChatRWKV()
 
 print("say something : ")
 while True:
+    print("User: ")
     msg = input()
     if len(msg.strip()) > 0:
         print("\n")
+        print("Weprompt: ")
         print(response_generator.on_message(msg, '30', '7', 'ProjectAdvisor'))
         print("\n")
     else:
