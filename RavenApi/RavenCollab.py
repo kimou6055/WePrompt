@@ -2,7 +2,6 @@
 import os, copy, types, gc, sys
 current_path = os.path.dirname(os.path.abspath(__file__))
 import numpy as np
-sys.path.append(f'{current_path}/rwkv_pip_package/src')
 try:
     os.environ["CUDA_VISIBLE_DEVICES"] = sys.argv[1]
 except:
@@ -21,20 +20,20 @@ torch._C._jit_override_can_fuse_on_gpu(True)
 torch._C._jit_set_texpr_fuser_enabled(False)
 torch._C._jit_set_nvfuser_enabled(False)
 
+np.set_printoptions(precision=4, suppress=True, linewidth=200)
 
 os.environ["RWKV_JIT_ON"] = '1' 
 os.environ["RWKV_CUDA_ON"] = '1'
-from rwkv.model import RWKV
-from rwkv.utils import PIPELINE
+
 
 class ChatRWKV:
     def __init__(self):
 
-        np.set_printoptions(precision=4, suppress=True, linewidth=200)
+        
         self.args = types.SimpleNamespace()
         
-        #self.args.strategy = 'cuda fp16 *12 -> cuda fp16i8 *1 -> cpu fp32'
-        self.args.strategy = 'cuda fp16'
+        self.args.strategy = 'cuda fp16 *12 -> cuda fp16i8 *1 -> cpu fp32'
+        #self.args.strategy = 'cuda fp16'
         self.args.MODEL_NAME = 'RWKV-4-Raven-7B-v12-Eng98%-Other2%-20230521-ctx8192'
         self.CHAT_LANG = 'English'
         
@@ -143,12 +142,6 @@ class ChatRWKV:
         x_temp = self.GEN_TEMP
         x_top_p = self.GEN_TOP_P
         
-        if x_temp <= 0.2:
-            x_temp = 0.2
-        if x_temp >= 5:
-            x_temp = 5
-        if x_top_p <= 0:
-            x_top_p = 0
         msg = msg.strip()
 
         if not os.path.exists(f"{current_path}/users/{user_id}/{discussion_id}/chat_{srv}.pkl"):
@@ -210,7 +203,7 @@ class ChatRWKV:
             xxx = self.pipeline.decode(self.model_tokens[out_last:])
             if '\ufffd' not in xxx: # avoid utf-8 display issues
                 generated_response=generated_response + xxx
-                print(generated_response+'\n', end='', flush=True)
+                #print(generated_response+'\n', end='', flush=True)
                 out_last = begin + i + 1
             
             send_msg = self.pipeline.decode(self.model_tokens[begin:])
@@ -224,8 +217,10 @@ class ChatRWKV:
 
         return generated_response    
 
-
+from rwkv.model import RWKV
+from rwkv.utils import PIPELINE
 response_generator = ChatRWKV()
+
 print("say something : ")
 while True:
     msg = input()
