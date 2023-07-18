@@ -34,7 +34,7 @@ class ChatRWKV:
         
         #self.args.strategy = 'cuda fp16 *12 -> cuda fp16i8 *1 -> cpu fp32'
         self.args.strategy = 'cuda fp16'
-        self.args.MODEL_NAME = 'RWKV-4-Raven-7B-v12-Eng98%-Other2%-20230521-ctx8192'
+        self.args.MODEL_NAME = 'RWKV-4-Raven-14B-v12-Eng98%25-Other2%25-20230523-ctx8192'
         self.CHAT_LANG = 'English'
         
         self.CHAT_LEN_SHORT = 30
