@@ -1,23 +1,23 @@
 <img  width='805' src="https://miro.medium.com/v2/resize:fit:1400/1*iGdFJTHMIG79N2HChWaooQ.gif" alt="kimou6055" /></a> 
-<img   width='400' src="./assets/Wevioo.png" alt="kimou6055" /></a> 
+<img   width='400' src="./RavenApi/assets/wevioo.png" alt="kimou6055" /></a> 
 
 
 ## WePromt 1.0
 WePrompt is a text generative model that can be an SQLAdvisor, a ProjectAdvisor and more  ! 
 
 ## Directory structure :
-├───RavenApi 
-│   20B_tokenizer.json
-│   convert_model.py 
-│   RavenApi.py
-│   RavenCloud.py
-│   weprompt.ipynb
-│
-├───instructions
-│       ProjectAdvisor.py
-│       SQLAdvisor.py
-│
-└───users
+├───RavenApi                                                                                              
+│   20B_tokenizer.json                                                                                    
+│   convert_model.py                                                                                      
+│   RavenApi.py                                                                                           
+│   RavenCloud.py                                                                                         
+│   weprompt.ipynb                                                                                        
+│                                                                                                         
+├───instructions                                                                                          
+│       ProjectAdvisor.py                                                                                 
+│       SQLAdvisor.py                                                                                     
+│                                                                                                         
+└───users                                                                                                 
 
 ### RavenApi folder :
 
@@ -171,7 +171,7 @@ python RavenApi.py
 ```
 Then you can interact with the model directly through the terminal.
 
-<img   width='500' src="./assets/chatex.png" alt="kimou6055" /></a> 
+<img   width='500' src="./RavenApi/assets/chatex.png" alt="kimou6055" /></a> 
 
 ## Performance 
 
@@ -213,11 +213,11 @@ Capturing Long-Distance Dependencies: RWKV Linear-Attention is designed to bette
 Reduction of Positional Bias: In QKV-Attention, queries and keys may be sensitive to the position of elements in the sequence, leading to positional bias. RWKV Linear-Attention, with its linear reference, can reduce this bias and improve the model's robustness.
 
 
-<img   width='500' src="./assets/RWKV-formula.png" alt="kimou6055" /></a> 
+<img   width='500' src="./RavenApi/assets/RWKV-formula.png" alt="kimou6055" /></a> 
 
 ### Raven Architecture
 
-<img   width='500' src="./assets/RWKV-paper.png" alt="kimou6055" /></a> 
+<img   width='500' src="./RavenApi/assets/RWKV-paper.png" alt="kimou6055" /></a> 
 
 ### Conclusion 
 [Here](https://www.canva.com/design/DAFl0PMO1Fc/D1k7EG1VMgPtTtLGnIJnuA/edit?utm_content=DAFl0PMO1Fc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) is a canva presentation
