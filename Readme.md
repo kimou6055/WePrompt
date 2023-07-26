@@ -1,6 +1,6 @@
 <img  width='805' src="https://miro.medium.com/v2/resize:fit:1400/1*iGdFJTHMIG79N2HChWaooQ.gif" alt="kimou6055" /></a> 
 <img   width='400' src="./RavenApi/assets/wevioo.png" alt="kimou6055" /></a> 
-
+<img   width='400' src="./RavenApi/assets/esprit.png" alt="kimou6055" /></a> 
 
 ## WePromt 1.0
 WePrompt is a text generative model that can be an SQLAdvisor, a ProjectAdvisor and more  ! 
@@ -222,6 +222,10 @@ Reduction of Positional Bias: In QKV-Attention, queries and keys may be sensitiv
 ### Conclusion 
 [Here](https://www.canva.com/design/DAFl0PMO1Fc/D1k7EG1VMgPtTtLGnIJnuA/edit?utm_content=DAFl0PMO1Fc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) is a canva presentation
 
-## possibilities 
+## Possibilities 
 
 finetuning the model with custom data.
+
+## Credits : 
+ Credits for the RWKV-4-Raven model goes to [BlinkDL](RWKV-4-Raven)
+ Credits for project structure and implementation goes to [Med Karim Akkari](linkedin.com/in/karim-akkari-9613661bb/)
