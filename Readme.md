@@ -267,13 +267,15 @@ Raven v12 scores 11.6 for HumanEval, while GPT4 alpaca lora scores 14.0. A highe
 
 
 ### Conclusion 
+
+Raven v4 is not very powerful, it can perform basic tasks such as writing sql queries and simple code in python or java for example, but if you want to use it as your project structurer it won't be able to guide you very well, because of its 14B parameters. Nevertheless, it is a good model for understanding and following the thread of a discussion. Projects with Raven v4 would be simple chatbots that would respond on demand either to universal, known questions, or to custom data, and in this case we'd be moving towards Raven 3B or 7B for the finetuning.
+
 [Here](https://www.canva.com/design/DAFl0PMO1Fc/D1k7EG1VMgPtTtLGnIJnuA/edit?utm_content=DAFl0PMO1Fc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) is a presentation for the RWKV model in the Wevioo intenship context. 
-
-
 
 ## Possibilities 
 
 finetuning the model with custom data.
+
 
 ## Credits : 
  Credits for the RWKV-4-Raven model goes to [BlinkDL](RWKV-4-Raven)                                       
