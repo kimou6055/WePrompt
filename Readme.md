@@ -2,10 +2,10 @@
 <img   width='400' src="./RavenApi/assets/wevioo.png" alt="kimou6055" /></a> 
 <img   width='400' src="./RavenApi/assets/esprit.png" alt="kimou6055" /></a> 
 
-## WePromt 1.0
+# WePromt 1.0
 WePrompt is a text generative model that can be an SQLAdvisor, a ProjectAdvisor and more  ! 
 
-## Directory structure :
+# Directory structure :
 ├───RavenApi                                                                                              
 │   20B_tokenizer.json                                                                                    
 │   convert_model.py                                                                                      
@@ -36,16 +36,16 @@ restrict the model to a certain use allows you to controle it.
 
 contains users directory with subdirectories for their conversations.
 
-## Project Explanation :
+# Project Explanation :
 
 
 
-## Prerequirments
+### Prerequirments
 Python 3.4+
 Virtualenv
 pip
 
-## Installation
+### Installation
 ```
 apt-get install -y git
 ```
@@ -109,7 +109,7 @@ Make sure to install CUDA :
  [Linux](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/)
  [Windows](https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/)
 
-## Usage
+### Usage
 To use cuda acceleration please do : 
 
 linux: 
@@ -173,7 +173,7 @@ Then you can interact with the model directly through the terminal.
 
 <img   width='800' src="./RavenApi/assets/chatex.png" alt="kimou6055" /></a> 
 
-## Performance 
+### Performance 
 
 The 7B model performs greatly on google collab's nvidia v100 and tesla T4 , it consumes 20 GB ram to load then 16 GB Vram.
 The strategy used was cuda fp16 using the first layer on cpu, the layers 2->33 on gpu.
@@ -181,7 +181,7 @@ The strategy used was cuda fp16 using the first layer on cpu, the layers 2->33 o
 The 14B model perfoms well on vast.ai instance 2X RTX 4000 , it consumes 30GB ram to load then 32 gb Vram.
 The stratgy used was cuda 0:fp16 -> cuda 1:fp16 using the first layer on cpu, the layers 2->16 on gpu 1 and the layers 17 -> 33 on gpu 2 .
 
-## Why Raven ? 
+# Why Raven ? 
 
 RWKV sounds like an impressive language model developed by BLINKDL that combines the strengths of both RNN and Transformer architectures. By blending these two approaches, RWKV achieves results similar to a Transformer-based language model, providing high performance while being directly trainable in a manner similar to a GPT-style Transformer (parallelizable).
 
@@ -266,18 +266,18 @@ Raven v12 scores 31.8 for CRASS, while GPT4 alpaca lora has a similar score of 3
 Raven v12 scores 11.6 for HumanEval, while GPT4 alpaca lora scores 14.0. A higher HumanEval score for Raven v12 suggests that it is better perceived by human evaluators.
 
 
-### Conclusion 
+# Conclusion 
 
 Raven v4 is not very powerful, it can perform basic tasks such as writing sql queries and simple code in python or java for example, but if you want to use it as your project structurer it won't be able to guide you very well, because of its 14B parameters. Nevertheless, it is a good model for understanding and following the thread of a discussion. Projects with Raven v4 would be simple chatbots that would respond on demand either to universal, known questions, or to custom data, and in this case we'd be moving towards Raven 3B or 7B for the finetuning.
 
 [Here](https://www.canva.com/design/DAFl0PMO1Fc/D1k7EG1VMgPtTtLGnIJnuA/edit?utm_content=DAFl0PMO1Fc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) is a presentation for the RWKV model in the Wevioo intenship context. 
 
-## Possibilities 
+# Possibilities 
 
 finetuning the model with custom data.
 
 
-## Credits : 
+# Credits : 
  Credits for the RWKV-4-Raven model goes to [BlinkDL](RWKV-4-Raven)                                       
  
  Credits for project structure and implementation goes to [Med Karim Akkari](linkedin.com/in/karim-akkari-9613661bb/)
