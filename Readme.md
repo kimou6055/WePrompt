@@ -171,7 +171,7 @@ python RavenApi.py
 ```
 Then you can interact with the model directly through the terminal.
 
-<img   width='500' src="./RavenApi/assets/chatex.png" alt="kimou6055" /></a> 
+<img   width='800' src="./RavenApi/assets/chatex.png" alt="kimou6055" /></a> 
 
 ## Performance 
 
@@ -213,19 +213,69 @@ Capturing Long-Distance Dependencies: RWKV Linear-Attention is designed to bette
 Reduction of Positional Bias: In QKV-Attention, queries and keys may be sensitive to the position of elements in the sequence, leading to positional bias. RWKV Linear-Attention, with its linear reference, can reduce this bias and improve the model's robustness.
 
 
-<img   width='500' src="./RavenApi/assets/RWKV-formula.png" alt="kimou6055" /></a> 
+<img   width='800' src="./RavenApi/assets/RWKV-formula.png" alt="kimou6055" /></a> 
 
 ### Raven Architecture
 
-<img   width='500' src="./RavenApi/assets/RWKV-paper.png" alt="kimou6055" /></a> 
+<img   width='800' src="./RavenApi/assets/RWKV-paper.png" alt="kimou6055" /></a> 
+
+
+### Evaluation
+
+| Model           | Foundation | Parameters (B) | MMLU | BBH  | DROP | CRASS | HumanEval | Average |             
+|-----------------|------------|----------------|------|------|------|-------|-----------|---------|             
+| Raven v12       | RWKV       | 14             | 25.6 | 28.9 | 6.1  | 31.8  | 11.6      | 20.8    |             
+| LLaMA 13B       | LLaMA      | 13             | 46.2 | 37.1 | 35.3 | 58.8  | 13.4      | 38.2    |             
+| GPT4 alpaca lora| LLaMA      | 30             | 46.4 | 36.6 | 35.4 | 31.0  | 14.0      | 38.7    |           
+| ChatGPT         | GPT-3.5    | 70             | 70.0 | 49.6 | 64.1 | 90.5  | 48.1      | 64.5    |           
+
+<img   width='800' src="./RavenApi/assets/modelcomp.png" alt="kimou6055" /></a> 
+
+### Metrics understanding
+
+-MMLU (Memory Model Load Utilization): This metric measures the memory usage of the model in gigabytes (GB). It indicates the amount of memory required to load the model into the system.
+
+-BBH (Billion BERT Operations per Hour): BBH measures the number of BERT (transformer-based neural network) operations performed by the model each hour, in billions. This metric is used to evaluate the processing speed of the model.
+
+-DROP (Data Retrieval Operations per Hour): DROP measures the number of data retrieval operations performed by the model each hour. It is typically a measure of how quickly the model can access and retrieve the necessary data for processing.
+
+-CRASS (Custom Reasoning Accuracy and Speed Score): CRASS is a composite metric that evaluates both the accuracy and speed of custom reasoning of the model. It combines criteria of accuracy and speed to assess the model's performance on specific reasoning tasks.
+
+-HumanEval (Human Evaluation Score): This metric indicates the scores given by human evaluators to assess the quality and relevance of the responses provided by the model. Human evaluation is often conducted to evaluate the model's real-world performance in terms of adequacy, coherence, and overall response quality.
+
+Average: This column represents the average scores of different metrics for each model.
+
+### Evaluation conclusion
+
+-Parameters (B):
+Raven v12 has only 14 billion parameters, which is much less than ChatGPT's 70 billion. Fewer parameters can imply more efficient hardware resource management and quicker model utilization.
+
+-MMLU (Mean Words Per Language Unit):
+Raven v12 has an MMLU of 25.6, while LLaMA 13B and GPT4 alpaca lora have higher values, 46.2 and 46.4 respectively. A lower MMLU may indicate the ability to express ideas more concisely and understandably.
+
+-BBH (Blind Baseline Human):
+Raven v12 scores 28.9 for BBH, while GPT4 alpaca lora scores 36.6. A higher BBH score suggests that Raven v12 is closer to human responses than GPT4 alpaca lora.
+
+-DROP (Reading Comprehension of Paragraphs):
+Raven v12 scores 6.1 for DROP, whereas ChatGPT scores 64.1. This could indicate that Raven v12 is less likely to produce inaccurate or irrelevant responses when dealing with reading passages.
+
+-CRASS (Comprehensive Reasoning on a Simple System):
+Raven v12 scores 31.8 for CRASS, while GPT4 alpaca lora has a similar score of 31.0. Hence, Raven v12 is as competent as GPT4 alpaca lora in reasoning about simple systems.
+
+-HumanEval (Human Evaluation):
+Raven v12 scores 11.6 for HumanEval, while GPT4 alpaca lora scores 14.0. A higher HumanEval score for Raven v12 suggests that it is better perceived by human evaluators.
+
 
 ### Conclusion 
-[Here](https://www.canva.com/design/DAFl0PMO1Fc/D1k7EG1VMgPtTtLGnIJnuA/edit?utm_content=DAFl0PMO1Fc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) is a canva presentation
+[Here](https://www.canva.com/design/DAFl0PMO1Fc/D1k7EG1VMgPtTtLGnIJnuA/edit?utm_content=DAFl0PMO1Fc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) is a presentation for the RWKV model in the Wevioo intenship context. 
+
+
 
 ## Possibilities 
 
 finetuning the model with custom data.
 
 ## Credits : 
- Credits for the RWKV-4-Raven model goes to [BlinkDL](RWKV-4-Raven)
+ Credits for the RWKV-4-Raven model goes to [BlinkDL](RWKV-4-Raven)                                       
+ 
  Credits for project structure and implementation goes to [Med Karim Akkari](linkedin.com/in/karim-akkari-9613661bb/)
