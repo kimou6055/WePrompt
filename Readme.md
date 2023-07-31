@@ -281,6 +281,7 @@ Raven v4, a model based on the foundation of RWKV-4 has a promising architecture
 
 [Here](https://www.canva.com/design/DAFl0PMO1Fc/D1k7EG1VMgPtTtLGnIJnuA/edit?utm_content=DAFl0PMO1Fc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) is a presentation for the RWKV model in the Wevioo intenship context. 
 
+Check the paper RWKV: Reinventing RNNs for the Transformer Era [HERE](https://arxiv.org/abs/2305.13048)
 # Possibilities 
 
 Projects with Raven v4 would be simple chatbots that would respond on demand either to universal, known questions in the model's training data, or to personalised data, in which case we would be more interested in finetuning models with 500M or 1.5B parameters at a low training cost, while taking advantage of its architecture and the fact that, with a certain implementation, the model remembers the conversation.
