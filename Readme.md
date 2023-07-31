@@ -3,7 +3,7 @@
 <img   width='400' src="./RavenApi/assets/esprit.png" alt="kimou6055" /></a> 
 
 # WePromt 1.0
-WePrompt is a text generative model that can be an SQLAdvisor, a ProjectAdvisor and more  ! 
+WePrompt is a powerful text generative model that serves as an SQLAdvisor, a ProjectAdvisor, and much more! With its cutting-edge architecture, WePrompt can help guide you through various projects, offering valuable insights and suggestions.
 
 # Directory structure :
 ├───RavenApi                                                                                              
@@ -21,28 +21,37 @@ WePrompt is a text generative model that can be an SQLAdvisor, a ProjectAdvisor 
 
 ### RavenApi folder :
 
-20B_tokenizer.json : model's tokenizer
-convert_model : strategy model converter for better and faster model loading
-RavenApi : the Raven model as an API 
-RavenCloud : interact with the raven model with the CLI 
-weprompt.ipynb : a jupyter notebook to run the model , the terminal is needed.
+-20B_tokenizer.json: The model's tokenizer, essential for processing text inputs.
+
+-convert_model.py: A strategy model converter that optimizes and speeds up the model loading process.
+
+-RavenApi.py: The implementation of the Raven model as an API, enabling seamless integration with other applications.
+
+-RavenCloud.py: A CLI (Command-Line Interface) for interacting with the Raven model directly via the terminal.
+
+-weprompt.ipynb: A Jupyter notebook for running the model. Note that the terminal is required for execution.
+
 
 ### instructions folder :
 
-ProjectAdvisor: initial prompt that will guide the model to be a ProjectAdvisor
-SQLAdvisor: initial prompt that will guide the model to be a SQLAdvisor
-restrict the model to a certain use allows you to controle it.
+-ProjectAdvisor.py: An initial prompt that guides the model to function as a ProjectAdvisor.
+
+-SQLAdvisor.py: An initial prompt that guides the model to function as an SQLAdvisor. 
+
+Restricting the model to specific use cases allows for better control and performance.
 ### users folder :
 
-contains users directory with subdirectories for their conversations.
+The "users" folder contains directories for individual users, each containing their respective conversations.
+
 
 # Project Explanation :
 
+The primary objective of this project was to explore the capabilities of the generative text model called RAVEN in its version 4, driven by an open-source community. Additionally, it aimed to assess the model's vision regarding future outputs and projects.
 
-
+# Project implementation :
 ### Prerequirments
-Python 3.4+
-Virtualenv
+Python 3.4+                                                       
+Virtualenv                      
 pip
 
 ### Installation
@@ -88,7 +97,7 @@ linux :
 ```
 source venv/bin/activate
 ```
-Make sure you have Python 3.x installed on your machine. You can install the required Python libraries by running:
+You can install the required Python libraries by running:
 
 ```
 pip install rwkv
@@ -105,7 +114,7 @@ you can dowload the RAVEN V12 14B Params from this [Link](https://huggingface.co
 Make sure to put the model in the RavenApi folder
 
 
-Make sure to install CUDA : 
+Make sure to install CUDA :       
  [Linux](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/)
  [Windows](https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/)
 
@@ -124,7 +133,7 @@ windows:
 Install VS2022 build tools (https://aka.ms/vs/17/release/vs_BuildTools.exe select Desktop C++). Reinstall CUDA 11.7 (install VC++ extensions). Run v2/chat.py in "x64 native tools command prompt". 
 
 
-### RavenAPI
+# RavenAPI
 To use :
 
 ```
@@ -153,17 +162,17 @@ the response will be as the follow :
     "generated_text": " Sure, here's a summary of our conversation:\n1. I created a new file called `Home.js` and added some basic HTML and CSS to it.\n2. I created a new file called `index.js` and added some basic code to it, including a function that sends a request to the MySQL database using the `axios` library.\n3. I created a new file called `App.js` and added some basic code to it, including a function that renders the Home component using the `ReactDOM.render()` method.\n4. I created a new file called `index.css` and added some basic styles to it, including a logo and some basic styling for the page\n\n"
 }
 ```
-You can use ProjectAdvisor or SQLAdvisor 
+You can use ProjectAdvisor.py or SQLAdvisor.py 
 
 PS : choose the proper strategy for your own hardware configuration while loading the RWKV model in RavenCloud.py or RavenApi.py
 
 
-you can see other options [HERE](https://github.com/BlinkDL/ChatRWKV/blob/main/ChatRWKV-strategy.png)
+you can see other strategy options [HERE](https://github.com/BlinkDL/ChatRWKV/blob/main/ChatRWKV-strategy.png)
 
 RWKV python implementation can be found [HERE](https://pypi.org/project/rwkv/)
 
-Hyperparameters of RWKV can be found in the actions.py file
-### RavenCloud
+
+# RavenCloud
 
 ```
 cd WePrompt/RavenApi
@@ -175,11 +184,9 @@ Then you can interact with the model directly through the terminal.
 
 ### Performance 
 
-The 7B model performs greatly on google collab's nvidia v100 and tesla T4 , it consumes 20 GB ram to load then 16 GB Vram.
-The strategy used was cuda fp16 using the first layer on cpu, the layers 2->33 on gpu.
+The 7B model performs exceptionally well on Google Colab's NVIDIA V100 and Tesla T4, consuming 20 GB of RAM for loading and 16 GB of VRAM. The strategy used for this model is CUDA FP16, with the first layer on the CPU and layers 2 to 33 on the GPU.
 
-The 14B model perfoms well on vast.ai instance 2X RTX 4000 , it consumes 30GB ram to load then 32 gb Vram.
-The stratgy used was cuda 0:fp16 -> cuda 1:fp16 using the first layer on cpu, the layers 2->16 on gpu 1 and the layers 17 -> 33 on gpu 2 .
+The 14B model performs well on Vast.ai instance 2X RTX 4000, consuming 30 GB of RAM for loading and 32 GB of VRAM. The strategy used for this model is CUDA 0:FP16 -> CUDA 1:FP16, with the first layer on the CPU, layers 2 to 16 on GPU 1, and layers 17 to 33 on GPU 2.
 
 # Why Raven ? 
 
@@ -190,21 +197,21 @@ One notable advantage of RWKV is that it is entirely attention-free, meaning it 
 Additionally, by utilizing the "GPT" mode, it becomes possible to quickly compute the hidden state for the "RNN" mode. This further enhances training speed and efficiency.
 
 Overall, RWKV appears to offer exceptional performance, reduced NV-RAM memory usage, fast training, and the potential for an "infinite" ctx_len (context length). This combination of features makes it a promising and powerful language model.
-### RWKV definition 
+## RWKV definition 
 
 RWKV is an attention mechanism used in the context of language models, particularly in Transformers. It stands for:
 
-R - Reference (Référence in French): The letter "R" represents the linear reference. The reference is calculated by linearly combining elements of the sequence using learned weights. It serves as a point of reference for evaluating the importance of other elements in the sequence when calculating attention scores.
+R - Reference : The letter "R" represents the linear reference. The reference is calculated by linearly combining elements of the sequence using learned weights. It serves as a point of reference for evaluating the importance of other elements in the sequence when calculating attention scores.
 
-W - Weights (Poids in French): The letter "W" refers to the weights used to linearly combine the elements of the sequence to calculate the reference. These weights are learned during the model training and are used to assign relative importance to each element of the sequence when constructing the linear reference.
+W - Weights : The letter "W" refers to the weights used to linearly combine the elements of the sequence to calculate the reference. These weights are learned during the model training and are used to assign relative importance to each element of the sequence when constructing the linear reference.
 
-K - Key (Clé in French): The letter "K" represents the keys associated with the elements of the sequence. Keys are used to measure the similarity between each element of the sequence and the linear reference. Attention scores are calculated by comparing the keys with the reference.
+K - Key : The letter "K" represents the keys associated with the elements of the sequence. Keys are used to measure the similarity between each element of the sequence and the linear reference. Attention scores are calculated by comparing the keys with the reference.
 
-V - Value (Valeur in French): The letter "V" represents the values associated with the elements of the sequence. Values correspond to the information that needs to be aggregated or represented when calculating attention. They are weighted by the attention scores and aggregated to form the final attention representation.
+V - Value : The letter "V" represents the values associated with the elements of the sequence. Values correspond to the information that needs to be aggregated or represented when calculating attention. They are weighted by the attention scores and aggregated to form the final attention representation.
 
 In summary, RWKV is a method of calculating attention in a Transformer model, where a reference is derived from the sequence elements using learned weights (W) and compared to the keys (K) to compute attention scores. The corresponding values (V) are then combined based on these attention scores to produce the final attention representation. This mechanism allows the model to focus on relevant parts of the input sequence during processing.
 
-### RWKV  better than QKV
+## RWKV  better than QKV
 
 Reduced Complexity: RWKV Linear-Attention can be more computationally efficient compared to QKV-Attention, as it uses a linear reference instead of a combination of queries, keys, and values. This can be advantageous in terms of execution speed and resource utilization.
 
@@ -215,12 +222,12 @@ Reduction of Positional Bias: In QKV-Attention, queries and keys may be sensitiv
 
 <img   width='800' src="./RavenApi/assets/RWKV-formula.png" alt="kimou6055" /></a> 
 
-### Raven Architecture
+## Raven Architecture
 
 <img   width='800' src="./RavenApi/assets/RWKV-paper.png" alt="kimou6055" /></a> 
 
 
-### Evaluation
+## Evaluation
 
 | Model           | Foundation | Parameters (B) | MMLU | BBH  | DROP | CRASS | HumanEval | Average |             
 |-----------------|------------|----------------|------|------|------|-------|-----------|---------|             
@@ -231,7 +238,7 @@ Reduction of Positional Bias: In QKV-Attention, queries and keys may be sensitiv
 
 <img   width='800' src="./RavenApi/assets/modelcomp.png" alt="kimou6055" /></a> 
 
-### Metrics understanding
+## Metrics understanding
 
 -MMLU (Memory Model Load Utilization): This metric measures the memory usage of the model in gigabytes (GB). It indicates the amount of memory required to load the model into the system.
 
@@ -268,16 +275,22 @@ Raven v12 scores 11.6 for HumanEval, while GPT4 alpaca lora scores 14.0. A highe
 
 # Conclusion 
 
-Raven v4 is not very powerful, it can perform basic tasks such as writing sql queries and simple code in python or java for example, but if you want to use it as your project structurer it won't be able to guide you very well, because of its 14B parameters. Nevertheless, it is a good model for understanding and following the thread of a discussion. Projects with Raven v4 would be simple chatbots that would respond on demand either to universal, known questions, or to custom data, and in this case we'd be moving towards Raven 3B or 7B for the finetuning.
+Raven v4, a model based on the foundation of RWKV-4 has a promising architecture, however, the version of its weights trained by the community is not very powerful, the model can perform basic tasks like writing SQL queries and simple code in Python or Java for example, but if you want to use it as a project structure it will not be able to guide you very well, because of its obsolete training data. Nevertheless, it's a good model for understanding and following the thread of a discussion. The important thing is that the model has an architecture that favors its low-cost training and that with well-chosen custom training data, it can be worth a gpt-3.5 or even better and more specialized, depending on your data.
+
+
 
 [Here](https://www.canva.com/design/DAFl0PMO1Fc/D1k7EG1VMgPtTtLGnIJnuA/edit?utm_content=DAFl0PMO1Fc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) is a presentation for the RWKV model in the Wevioo intenship context. 
 
 # Possibilities 
 
-finetuning the model with custom data.
+Projects with Raven v4 would be simple chatbots that would respond on demand either to universal, known questions in the model's training data, or to personalised data, in which case we would be more interested in finetuning models with 500M or 1.5B parameters at a low training cost, while taking advantage of its architecture and the fact that, with a certain implementation, the model remembers the conversation.
 
 
 # Credits : 
  Credits for the RWKV-4-Raven model goes to [BlinkDL](RWKV-4-Raven)                                       
  
  Credits for project structure and implementation goes to [Med Karim Akkari](linkedin.com/in/karim-akkari-9613661bb/)
+
+
+
+
