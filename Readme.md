@@ -289,7 +289,7 @@ Projects with Raven v4 would be simple chatbots that would respond on demand eit
 # Credits : 
  Credits for the RWKV-4-Raven model goes to [BlinkDL](RWKV-4-Raven)                                       
  
- Credits for project structure and implementation goes to [Med Karim Akkari](linkedin.com/in/karim-akkari-9613661bb/)
+ Credits for project structure and implementation goes to [Med Karim Akkari](https://linkedin.com/in/karim-akkari-9613661bb/)
 
 
 
