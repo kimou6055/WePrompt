@@ -6,6 +6,7 @@
 WePrompt is a powerful text generative model that serves as an SQLAdvisor, a ProjectAdvisor, and much more! With its cutting-edge architecture, WePrompt can help guide you through various projects, offering valuable insights and suggestions.
 
 # Directory structure :
+```
 ├───RavenApi                                                                                              
 │   20B_tokenizer.json                                                                                    
 │   convert_model.py                                                                                      
@@ -13,12 +14,12 @@ WePrompt is a powerful text generative model that serves as an SQLAdvisor, a Pro
 │   RavenCloud.py                                                                                         
 │   weprompt.ipynb                                                                                        
 │                                                                                                         
-├───instructions                                                                                          
+├───├instructions                                                                                          
 │       ProjectAdvisor.py                                                                                 
 │       SQLAdvisor.py                                                                                     
 │                                                                                                         
-└───users                                                                                                 
-
+└───├users                                                                                                 
+```
 ### RavenApi folder :
 
 -20B_tokenizer.json: The model's tokenizer, essential for processing text inputs.
